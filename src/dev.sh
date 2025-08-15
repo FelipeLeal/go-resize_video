@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Development script with hot reload functionality
 # Uses hash-based file watching to avoid infinite restart loops
@@ -46,15 +46,14 @@ echo "Initial hash: $current_hash"
 start_app
 
 # Watch for changes
-while true; do
+while true
+do
     sleep 2
     new_hash=$(calculate_hash)
     
     if [ "$new_hash" != "$current_hash" ]; then
         echo ">>> Changes detected! Restarting application..."
         echo "Old hash: $current_hash"
-        echo "New hash: $new_hash"
-        
         stop_app
         current_hash=$new_hash
         start_app
