@@ -54,6 +54,5 @@ dev-logs: ## Follow logs in development
 clean: ## Stop containers and remove images
 	$(COMPOSE) down --rmi all --volumes --remove-orphans
 
-rebuild: ## Rebuild from scratch
-	$(COMPOSE) down --rmi all --volumes --remove-orphans
-	$(COMPOSE) up --build
+rebuild: clean build up ## Rebuild from scratch
+
