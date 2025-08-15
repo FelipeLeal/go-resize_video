@@ -4,9 +4,8 @@ services:
     image: resize-video:latest
     container_name: resize-video
     volumes:
-      - ./src:/app
+      - .:/app
     working_dir: /app
     ports:
       - "8080:8080"
-    entrypoint: []
-    command: ["/bin/sh", "/usr/local/bin/dev.sh"]
+    command: ["air"]

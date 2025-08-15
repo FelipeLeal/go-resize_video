@@ -1,0 +1,30 @@
+# .air.toml
+
+root = "."
+tmp_dir = "tmp"
+
+[build]
+# The command to build the Go application.
+# `go build -o tmp/main .` will build the application and place the binary in the `tmp` directory.
+cmd = "go build -o ./tmp/main ."
+# The directory where the source code is located.
+exclude_dir = ["tmp"]
+# The file extensions to watch for changes.
+include_ext = ["go", "mod", "sum"]
+# The binary to run. This should match the output of the build command.
+bin = "./tmp/main"
+# The command to start the application.
+args_bin = []
+
+[log]
+# The color scheme for the logs.
+time = true
+color = true
+
+[misc]
+# If true, Air will kill the server when the application is reloaded.
+clean_on_exit = true
+
+[build.env]
+# Define environment variables for the build process if needed.
+# For example: CGO_ENABLED = "0"
