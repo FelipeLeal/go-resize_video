@@ -1,35 +1,19 @@
-FROM golang:1.24-alpine AS builder
+FROM golang:1.24-alpine
 
-# Set the working directory inside the container.
-WORKDIR /app
+# Install necessary packages:
+# - ffmpeg for video processing
+# - git for go modules (required by `go install`)
+# - ca-certificates for https requests
+RUN apk update && apk add --no-cache ffmpeg git ca-certificates
 
-# Copy the application source code.
-COPY . .
-
-# Install entr, which is a key part of your dev script.
-RUN apk update && \
-    apk add --no-cache entr
-
-# Install Air
+# Install Air for hot-reloading. The binary will be in the PATH.
+# Pinning the version of Air ensures reproducible builds.
 RUN go install github.com/air-verse/air@v1.62.0
 
-# Build the main Go application.
-# This will create a compiled binary.
-RUN go mod tidy
-RUN go build -o main .
-
-# --- Final stage to run the application ---
-# Use a smaller, cleaner base image to run the final application.
-FROM jrottenberg/ffmpeg:6.1-alpine
-
 # Set the working directory inside the container.
+# With the volume mount in docker-compose, this will be the project root.
 WORKDIR /app
 
-# Copy the built binary from the builder stage.
-COPY --from=builder /app/main .
-
-# Expose the port the app runs on.
+# The command will be provided by docker-compose.yml (i.e., ["air"])
+# We expose the port here for documentation.
 EXPOSE 8080
-
-# This is the new command. Air will now handle the hot-reloading.
-CMD ["./main"]

@@ -13,7 +13,7 @@ import (
 )
 
 // UploadHandler handles the POST request to upload and resize a video.
-func UploadHandler(c *gin.Context) {
+func (h *Handlers) UploadHandler(c *gin.Context) {
 	file, err := c.FormFile("video")
 	if err != nil {
 		c.JSON(http.StatusBadRequest, models.ErrorResponse{Error: "Unable to read video file from form data"})
@@ -27,7 +27,7 @@ func UploadHandler(c *gin.Context) {
 	}
 
 	// Save the file to the upload directory.
-	uploadPath := filepath.Join(appConfig.UploadDir, file.Filename)
+	uploadPath := filepath.Join(h.AppConfig.UploadDir, file.Filename)
 	src, err := file.Open()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, models.ErrorResponse{Error: "Failed to open uploaded file"})
@@ -48,7 +48,7 @@ func UploadHandler(c *gin.Context) {
 	}
 
 	// Call the video service to resize the video.
-	outputPath, err := videoService.ResizeVideo(uploadPath, resolution)
+	outputPath, err := h.VideoService.ResizeVideo(uploadPath, resolution)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, models.ErrorResponse{Error: err.Error()})
 		return

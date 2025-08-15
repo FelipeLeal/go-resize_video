@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"log"
 
-	"resize_video/src/config"
-	"resize_video/src/handlers"
+	"resize_video/config"
+	"resize_video/handlers"
 
 	"github.com/gin-gonic/gin"
 )

@@ -6,19 +6,19 @@ import (
 	"path/filepath"
 
 	"resize_video/src/models"
-	
+
 	"github.com/gin-gonic/gin"
 )
 
 // DownloadHandler serves the resized video for download.
-func DownloadHandler(c *gin.Context) {
+func (h *Handlers) DownloadHandler(c *gin.Context) {
 	fileName := c.Param("fileName")
 	if fileName == "" {
 		c.JSON(http.StatusBadRequest, models.ErrorResponse{Error: "File name is required"})
 		return
 	}
 
-	filePath := filepath.Join(appConfig.OutputDir, fileName)
+	filePath := filepath.Join(h.AppConfig.OutputDir, fileName)
 
 	// Check if the file exists.
 	if _, err := os.Stat(filePath); os.IsNotExist(err) {
