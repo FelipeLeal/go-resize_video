@@ -1,179 +1,111 @@
-# 🎥 Video Resizer
+# 🎥 Go Video Resizer API
 
-A modern, Docker-based web application for resizing videos built with Go and FFmpeg. Features a sleek user interface with hot reload development environment.
+A modern, Docker-based API for resizing videos, built with Go, Gin, and FFmpeg. Features a hot-reload development environment powered by Air.
 
 ## ✨ Features
 
-- **Easy Video Resizing**: Upload videos and resize them to popular resolutions
-- **Multiple Formats**: Supports MP4, AVI, MOV, MKV, and more video formats
-- **Pre-defined Resolutions**: 
-  - 📱 360p (640x360) - Mobile
-  - 💻 720p HD (1280x720) - Standard
-  - 🖥️ 1080p Full HD (1920x1080) - High Quality
-  - 🎬 1440p QHD (2560x1440) - Premium
-- **Modern UI**: Beautiful, responsive web interface with gradients and animations
-- **Hot Reload**: Development environment with automatic restart on code changes
-- **Docker Integration**: Fully containerized with FFmpeg pre-installed
+- **RESTful API**: Simple endpoints for uploading and downloading videos.
+- **Powerful Video Processing**: Leverages FFmpeg for resizing and format handling.
+- **Multiple Formats**: Supports MP4, AVI, MOV, MKV, and more video formats.
+- **Configurable Resolutions**: Easily define target resolutions for resizing.
+- **Hot Reload**: Development environment with `air` for automatic recompilation on code changes.
+- **Dockerized**: Fully containerized with Go and FFmpeg pre-installed for a consistent environment.
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 
-- Docker and Docker Compose installed on your system
-- Git (to clone the repository)
+- Docker and Docker Compose installed on your system.
+- Git (to clone the repository).
 
 ### Installation & Running
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/FelipeLeal/go-resize_video.git
-   cd go-resize_video
+   git clone <your-repository-url>
+   cd <your-repository-directory>
    ```
 
 2. **Start the application**
    ```bash
-   make up
-   ```
-   
-   Or using docker-compose directly:
-   ```bash
-   docker-compose up
+   docker-compose up --build
    ```
 
-3. **Access the application**
-   
-   Open your browser and navigate to: `http://localhost:8080`
+3. **Access the API**
 
-4. **Upload and resize videos**
-   - Select a video file
-   - Choose your desired resolution
-   - Click "Upload and Resize Video"
-   - Download the resized video
+   The server will be running and accessible. You can now send requests to the API endpoints, for example, using `curl` or Postman. The server listens on `http://localhost:8080`.
+
+### Example API Usage
+
+**Upload and resize a video:**
+
+```bash
+curl -X POST http://localhost:8080/api/upload \
+  -F "file=@/path/to/your/video.mp4" \
+  -F "resolution=1280x720"
+```
+
+**Download the resized video (using the filename from the upload response):**
+
+```bash
+curl -o resized_video.mp4 http://localhost:8080/api/download/your-resized-filename.mp4
+```
 
 ## 🛠️ Development
 
-The project includes a hot reload development environment that automatically restarts the application when Go files are modified.
+The project uses Air for live reloading. When you run `docker-compose up`, Air monitors your `.go` files for changes. Upon detecting a change, it automatically rebuilds and restarts the application inside the container.
 
-### Available Commands
-
-```bash
-# Start the application
-make up
-
-# Stop the application
-make down
-
-# View logs
-make logs
-
-# Restart the application
-make restart
-
-# Access the container shell
-make shell
-
-# View all containers
-make ps
-
-# Clean up Docker resources
-make prune
-
-# View all available commands
-make help
-```
-
-### Project Structure
-
-```
-resize_video/
-├── src/
-│   ├── resize.go           # Main Go application
-│   ├── dev.sh             # Hot reload development script
-│   ├── input.tmp          # Temporary upload file
-│   └── output.mp4         # Processed video output
-├── Dockerfile             # Container configuration
-├── docker-compose.yml     # Multi-container setup
-├── Makefile              # Development commands
-├── LICENSE               # Project license
-└── README.md            # This file
-```
+You can configure Air's behavior in the `.air.toml` file.
 
 ## 🔧 Technical Details
 
 ### Architecture
 
-- **Backend**: Go HTTP server with standard library
-- **Video Processing**: FFmpeg for video conversion and resizing
-- **Frontend**: HTML5 with embedded CSS and modern styling
-- **Container**: Alpine Linux with FFmpeg pre-installed
-- **Development**: Hash-based file watching for hot reload
+- **Backend**: Go with the Gin web framework.
+- **Video Processing**: FFmpeg command-line tool.
+- **Container**: `golang:1.24-alpine` base image with FFmpeg installed.
+- **Live Reload**: Air for hot-reloading during development.
 
 ### API Endpoints
 
-- `GET /` - Upload form (main interface)
-- `POST /upload` - Handle video upload and processing
-- `GET /download` - Download processed video
+- `POST /api/upload`: Handles video upload and queues it for resizing. Requires a multipart form with `file` and `resolution` fields.
+- `GET /api/download/:fileName`: Serves the resized video file for download.
 
-### File Watching System
+### Project Structure
 
-The development environment uses a sophisticated hash-based file watching system that:
-- Monitors Go source files for changes
-- Calculates MD5 hash of file contents
-- Only restarts when actual content changes (not just timestamps)
-- Provides zero false-positive restarts
-
-## 🎨 UI Features
-
-- **Responsive Design**: Works on desktop and mobile devices
-- **Modern Styling**: CSS gradients, shadows, and smooth animations
-- **File Upload**: Drag-and-drop style file input
-- **Progress Feedback**: Clear status messages and success screens
-- **Download Integration**: Direct download links for processed videos
-
-## ⚙️ Configuration
-
-### Supported Video Formats
-
-The application leverages FFmpeg's extensive format support:
-- **Input**: MP4, AVI, MOV, MKV, WebM, FLV, WMV, and more
-- **Output**: MP4 (H.264 video, original audio codec)
-
-### Resolution Options
-
-Pre-configured resolution presets:
-- **360p**: Optimized for mobile viewing and bandwidth conservation
-- **720p HD**: Standard high-definition, good balance of quality and file size
-- **1080p Full HD**: High quality for desktop viewing
-- **1440p QHD**: Premium quality for high-resolution displays
+```
+.
+├── .air.toml               # Configuration for Air (hot-reloading)
+├── .devcontainer/
+│   └── devcontainer.json   # VS Code Dev Container configuration
+├── Dockerfile              # Defines the application's Docker image
+├── docker-compose.yml      # Defines the services, networks, and volumes
+├── go.mod                  # Go module definitions
+├── go.sum                  # Go module checksums
+├── src/
+│   ├── config/             # Application configuration
+│   ├── handlers/           # Gin HTTP handlers (controllers)
+│   ├── main.go             # Application entry point
+│   ├── models/             # Data structures (e.g., API responses)
+│   └── services/           # Business logic (e.g., video processing)
+└── README.md               # This file
+```
 
 ## 🐳 Docker Configuration
 
 ### Base Image
-- `jrottenberg/ffmpeg:6.1-alpine` - Provides FFmpeg 6.1 on Alpine Linux
+
+- `golang:1.24-alpine`: A lightweight official Go image based on Alpine Linux.
 
 ### Runtime Dependencies
+
 - **Go**: For building and running the web server
-- **FFmpeg**: For video processing capabilities
-- **entr**: For file watching and hot reload functionality
+- **FFmpeg**: For all video processing tasks.
+- **Air**: For live-reloading during development.
 
 ### Volumes
-- `./src:/app` - Source code hot reload
-- `./src/dev.sh:/usr/local/bin/dev.sh` - Development script
 
-## 📝 Usage Examples
-
-### Basic Video Resize
-1. Upload a video file (any supported format)
-2. Select "720p HD (1280x720)" from the dropdown
-3. Click "Upload and Resize Video"
-4. Wait for processing to complete
-5. Click "Download Video" to get the resized file
-
-### Development Workflow
-1. Run `make up` to start the development environment
-2. Edit Go files in the `src/` directory
-3. Changes are automatically detected and the server restarts
-4. Refresh your browser to see the changes
+- `.:/app`: Mounts the entire project directory into the container's working directory, enabling live code changes.
 
 ## 🤝 Contributing
 
@@ -189,32 +121,16 @@ This project is licensed under the terms specified in the LICENSE file.
 
 ## 🔧 Troubleshooting
 
-### Common Issues
-
 **Container won't start:**
-- Ensure Docker is running
-- Check if port 8080 is available
-- Try `make down` followed by `make up`
+- Ensure Docker and Docker Compose are running.
+- Check if port 8080 is available on your host machine.
+- Run `docker-compose down` followed by `docker-compose up --build` to ensure a clean start.
 
 **Video processing fails:**
-- Verify the input file is a valid video format
-- Check Docker logs with `make logs`
-- Ensure sufficient disk space for temporary files
+- Verify the input file is a valid and supported video format.
+- Check the container logs for FFmpeg errors using `docker-compose logs`.
 
 **Hot reload not working:**
-- Check that volumes are properly mounted
-- Verify file permissions on `dev.sh`
-- Look for hash change messages in logs
-
-### Performance Tips
-
-- Use smaller input files for faster processing
-- Choose appropriate resolution based on your needs
-- Monitor Docker resource usage for large files
-
-## 📞 Support
-
-For issues, questions, or contributions, please:
-1. Check existing issues in the repository
-2. Create a new issue with detailed description
-3. Include relevant logs and system information
+- Ensure you are running the service with `docker-compose up`.
+- Verify that the volume `.:/app` is correctly defined in `docker-compose.yml`.
+- Check the container logs; Air will print messages when it detects file changes and restarts the server.

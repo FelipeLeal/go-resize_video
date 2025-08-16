@@ -1,0 +1,23 @@
+{
+    // A friendly name for your dev container.
+    "name": "Go Resize Video (Dev Container)",
+    // Points to your existing docker-compose.yml file.
+    "dockerComposeFile": "../docker-compose.yml",
+    // The service within the docker-compose.yml to use for the dev container.
+    "service": "resize",
+    // The folder inside the container where your code is located.
+    "workspaceFolder": "/app",
+    // Configure properties specific to VS Code.
+    "customizations": {
+        "vscode": {
+            // Add the IDs of extensions you want installed inside the container.
+            "extensions": [
+                "golang.go",
+                "cursor.cursor-extension",
+                "google.geminicodeassist"
+            ]
+        }
+    },
+    // Run 'go mod download' after the container is created.
+    "postCreateCommand": "go mod download"
+}

@@ -4,7 +4,11 @@ FROM golang:1.24-alpine
 # - ffmpeg for video processing
 # - git for go modules (required by `go install`)
 # - ca-certificates for https requests
-RUN apk update && apk add --no-cache ffmpeg git ca-certificates
+RUN apk update && apk add --no-cache \
+    bash \
+    ca-certificates \
+    ffmpeg \
+    git
 
 # Install Air for hot-reloading. The binary will be in the PATH.
 # Pinning the version of Air ensures reproducible builds.
