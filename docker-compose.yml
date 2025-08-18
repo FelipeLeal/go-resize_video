@@ -2,7 +2,7 @@ services:
   resize:
     build: .
     image: resize-video:latest
-    container_name: resize-video
+    container_name: go-resize-video
     volumes:
       - .:/app
     ports:
