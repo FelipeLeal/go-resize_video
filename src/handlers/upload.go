@@ -13,6 +13,17 @@ import (
 )
 
 // UploadHandler handles the POST request to upload and resize a video.
+// @Summary      Upload and resize a video
+// @Description  Uploads a video file and a desired resolution, resizes it, and returns a download link.
+// @Tags         videos
+// @Accept       multipart/form-data
+// @Produce      json
+// @Param        video       formData  file    true  "Video file to upload"
+// @Param        resolution  formData  string  true  "Desired resolution (e.g., 640x480)"
+// @Success      200         {object}  models.UploadResponse
+// @Failure      400         {object}  models.ErrorResponse
+// @Failure      500         {object}  models.ErrorResponse
+// @Router       /upload [post]
 func (h *Handlers) UploadHandler(c *gin.Context) {
 	file, err := c.FormFile("video")
 	if err != nil {

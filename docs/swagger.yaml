@@ -1,0 +1,91 @@
+basePath: /api
+definitions:
+  models.ErrorResponse:
+    properties:
+      error:
+        type: string
+    type: object
+  models.UploadResponse:
+    properties:
+      downloadURL:
+        type: string
+      message:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: f3lipel3al@gmail.com
+    name: API Support
+    url: http://www.example.com/support
+  description: This is a service to resize videos.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Resize Video API
+  version: "1.0"
+paths:
+  /download/{fileName}:
+    get:
+      description: Downloads a resized video file by its name.
+      parameters:
+      - description: File name of the resized video
+        in: path
+        name: fileName
+        required: true
+        type: string
+      produces:
+      - application/octet-stream
+      responses:
+        "200":
+          description: The video file
+          schema:
+            type: file
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Download a resized video
+      tags:
+      - videos
+  /upload:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Uploads a video file and a desired resolution, resizes it, and
+        returns a download link.
+      parameters:
+      - description: Video file to upload
+        in: formData
+        name: video
+        required: true
+        type: file
+      - description: Desired resolution (e.g., 640x480)
+        in: formData
+        name: resolution
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.UploadResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Upload and resize a video
+      tags:
+      - videos
+swagger: "2.0"

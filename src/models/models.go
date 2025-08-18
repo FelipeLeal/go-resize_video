@@ -1,12 +1,12 @@
 package models
 
-// UploadResponse represents the JSON response for a successful upload.
+// UploadResponse defines the structure for a successful upload response.
 type UploadResponse struct {
 	Message     string `json:"message"`
-	DownloadURL string `json:"download_url"`
+	DownloadURL string `json:"downloadURL"`
 }
 
-// ErrorResponse represents the JSON response for an error.
+// ErrorResponse defines the structure for a generic error response.
 type ErrorResponse struct {
 	Error string `json:"error"`
 }

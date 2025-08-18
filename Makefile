@@ -38,7 +38,7 @@ ps: ## Show running containers
 	$(COMPOSE) ps
 
 shell: ## Access the container shell
-	$(COMPOSE) exec $(APP_SERVICE_NAME) /bin/sh
+	$(COMPOSE) exec $(APP_SERVICE_NAME) /bin/bash
 
 prune: ## Remove unused Docker resources
 	docker system prune -f
@@ -55,4 +55,8 @@ clean: ## Stop containers and remove images
 	$(COMPOSE) down --rmi all --volumes --remove-orphans
 
 rebuild: clean build up ## Rebuild from scratch
+
+swagger: ## Generate Swagger API documentation
+	$(COMPOSE) exec $(APP_SERVICE_NAME) swag init -g src/main.go
+
 

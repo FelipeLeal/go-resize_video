@@ -11,6 +11,15 @@ import (
 )
 
 // DownloadHandler serves the resized video for download.
+// @Summary      Download a resized video
+// @Description  Downloads a resized video file by its name.
+// @Tags         videos
+// @Produce      application/octet-stream
+// @Param        fileName  path      string  true  "File name of the resized video"
+// @Success      200       {file}    file    "The video file"
+// @Failure      400       {object}  models.ErrorResponse
+// @Failure      404       {object}  models.ErrorResponse
+// @Router       /download/{fileName} [get]
 func (h *Handlers) DownloadHandler(c *gin.Context) {
 	fileName := c.Param("fileName")
 	if fileName == "" {
