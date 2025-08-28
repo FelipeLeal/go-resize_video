@@ -1,10 +1,12 @@
 services:
   resize:
-    build: .
+    build:
+      context: .
+      dockerfile: .docker/Dockerfile
     image: resize-video:latest
     container_name: go-resize-video
     volumes:
       - .:/app
     ports:
       - "8080:8080"
-    command: ["air"]
+    command: shell

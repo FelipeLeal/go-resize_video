@@ -59,6 +59,50 @@
                 }
             }
         },
+        "/image-to-pdf": {
+            "post": {
+                "description": "Uploads one or more image files and converts them into a single PDF document. The PDF can be downloaded via the returned URL.",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "pdf"
+                ],
+                "summary": "Convert images to PDF",
+                "parameters": [
+                    {
+                        "type": "file",
+                        "description": "Image files to include in the PDF. Provide multiple 'images' parts for multiple files.",
+                        "name": "images",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.PDFResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/upload": {
             "post": {
                 "description": "Uploads a video file and a desired resolution, resizes it, and returns a download link.",
@@ -116,6 +160,17 @@
             "type": "object",
             "properties": {
                 "error": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.PDFResponse": {
+            "type": "object",
+            "properties": {
+                "downloadURL": {
+                    "type": "string"
+                },
+                "message": {
                     "type": "string"
                 }
             }

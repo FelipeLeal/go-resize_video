@@ -17,7 +17,7 @@ build: ## Build the Docker image
 	$(COMPOSE) build --no-cache
 
 up: ## Start the application in detached mode
-	$(COMPOSE) up --remove-orphans
+	$(COMPOSE) run --rm --service-ports $(APP_SERVICE_NAME) || true
 
 down: ## Stop and remove containers
 	$(COMPOSE) down

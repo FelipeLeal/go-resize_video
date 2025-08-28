@@ -5,6 +5,13 @@ definitions:
       error:
         type: string
     type: object
+  models.PDFResponse:
+    properties:
+      downloadURL:
+        type: string
+      message:
+        type: string
+    type: object
   models.UploadResponse:
     properties:
       downloadURL:
@@ -53,6 +60,37 @@ paths:
       summary: Download a resized video
       tags:
       - videos
+  /image-to-pdf:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Uploads one or more image files and converts them into a single
+        PDF document. The PDF can be downloaded via the returned URL.
+      parameters:
+      - description: Image files to include in the PDF. Provide multiple 'images'
+          parts for multiple files.
+        in: formData
+        name: images
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.PDFResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Convert images to PDF
+      tags:
+      - pdf
   /upload:
     post:
       consumes:

@@ -38,6 +38,15 @@ func main() {
 	// Create a new Gin router.
 	router := gin.Default()
 
+	// Set a stricter policy for trusted proxies to resolve the Gin security warning.
+	// By default, Gin trusts all proxies, which is insecure. This configuration
+	// trusts only requests from the local machine (localhost for IPv4 and IPv6).
+	// In a production environment, you should replace this with the IP addresses
+	// of your load balancers or reverse proxies.
+	if err := router.SetTrustedProxies([]string{"127.0.0.1", "::1"}); err != nil {
+		log.Fatalf("Failed to set trusted proxies: %v", err)
+	}
+
 	// Create a handler instance with the initialized config.
 	h := handlers.NewHandlers(appConfig)
 
@@ -47,8 +56,9 @@ func main() {
 	// Define a group for our API endpoints.
 	api := router.Group("/api")
 	{
-		api.POST("/upload", h.UploadHandler)
-		api.GET("/download/:fileName", h.DownloadHandler)
+	api.POST("/upload", h.UploadHandler)
+	api.GET("/download/:fileName", h.DownloadHandler)
+	api.POST("/image-to-pdf", h.ImageToPDFHandler)
 	}
 
 	// Add Swagger endpoint.
